@@ -92,6 +92,21 @@ ${code}
 `
 }
 
+function renderExample([t, ...c]) {
+  return ce('p', [
+    ce('div.example-line', [
+      ce('h3', t),
+      ce('div.padding'),
+      ce('button', 'run', on('click', () => {
+        const win = window.open("", "Example", "menubar=no,status=no,location=no")
+        win.document.write(template(t, c.join('\n')))
+        win.document.close()
+      }))
+    ]),
+    ce('code', c.join('\n'))
+  ])
+}
+
 ce(document.body,
   [ce('div#app', [
     ce('h1', 'KISS.js'),
@@ -103,21 +118,37 @@ ce(document.body,
       ce('a#download', attr({href: 'https://codehz.github.io/KISS.js/kiss.js', download: 'kiss.js'}), 'Download', strlen),
       ce('a#issues', attr({href: 'https://github.com/codehz/KISS.js/issues'}), 'Issues', strlen)
     ]),
-    ce('section', xtitle('Example'), examples.map(([t, ...c]) => ce('p', [
-      ce('div.example-line', [
-        ce('h3', t),
-        ce('div.padding'),
-        ce('button', 'run', on('click', () => {
-          const win = window.open("", "Example", "menubar=no,status=no,location=no")
-          win.document.write(template(t, c.join('\n')))
-          win.document.close()
-        }))
-      ]),
-      ce('code', c.join('\n'))
-    ]))),
     ce('section', xtitle('Details'), [
-
-    ])
+      ce('p', ce('h3', 'First parameter'), ce('ul', [
+        ce('li', ce('h4', 'as HTMLElement'), renderExample([
+          'Mount content onto this element',
+          `ce(document.body, ce('div', "I'm DIV"))`
+        ])),
+        ce('li', ce('h4', 'as String'), renderExample([
+          'Create a HTMLElement (format TAG#ID.CLASS1.CLASS2)',
+          `ce(document.body, ce('div#target.test', 'div content'))`
+        ]))
+      ])),
+      ce('p', ce('h3', 'Rest parameter', ce('ul', [
+        ce('li', ce('h4', 'null or undefined'), renderExample([
+          'Do nothing',
+          `ce(document.body, null, undefined)`
+        ])),
+        ce('li', ce('h4', 'string'), renderExample([
+          'Replace text content',
+          `ce(document.body, 'I will be overwrited', 'I will be shown')`
+        ])),
+        ce('li', ce('h4', 'iterable or async generator'), renderExample([
+          'Recursively call with it',
+          `ce(document.body, ['I will be overwrited', 'I will be shown (same as above)'])`
+        ])),
+        ce('li', ce('h4', 'function and async function'), renderExample([
+          'Call it, then handle the return value',
+          `ce(document.body, el => console.log(el), discard(el => (el.style.backgroundColor = 'red')))`
+        ])),
+      ])))
+    ]),
+    ce('section', xtitle('Example'), examples.map(renderExample))
   ])]
 )
 //-->
@@ -153,7 +184,7 @@ body::before {
   position: relative;
   font-family: monospace;
   margin: 20px 0;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.4);
   display: flex;
   flex-direction: column;
   padding: 10px;
@@ -235,6 +266,13 @@ a:hover {
   /* background: #fff; */
   color: #000;
   box-shadow: inset var(--offset) 0 0 0 white, inset var(--neg-offset) 0 0 0 white;
+}
+ul > li {
+  list-style: none;
+  margin-top: 5px;
+  padding: 5px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
 }
   </style>
 </head>
