@@ -98,7 +98,11 @@ ce(document.body,
     ce('section', xtitle('Keep it simple'), [
       'Play with DOM directly, No Virtual DOM.',
       'Easy to extension! Everything can be done with function!'
-    ].map(c => ce('p', c)), ce('a#github', attr({href: 'https://github.com/codehz/KISS.js'}), 'GitHub', strlen)),
+    ].map(c => ce('p', c)), [
+      ce('a#github', attr({href: 'https://github.com/codehz/KISS.js'}), 'GitHub', strlen),
+      ce('a#download', attr({href: 'https://codehz.github.io/KISS.js/kiss.js', download: 'kiss.js'}), 'Download', strlen),
+      ce('a#issues', attr({href: 'https://github.com/codehz/KISS.js/issues'}), 'Issues', strlen)
+    ]),
     ce('section', xtitle('Example'), examples.map(([t, ...c]) => ce('p', [
       ce('div.example-line', [
         ce('h3', t),
@@ -225,6 +229,7 @@ a:any-link {
   transition: all ease .2s;
   --offset: calc((var(--text-length, 100) / 2 + 1) * 1ex);
   --neg-offset: calc(0ex - var(--offset));
+  margin-right: 1ex;
 }
 a:hover {
   /* background: #fff; */
